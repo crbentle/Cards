@@ -4,9 +4,16 @@ import java.util.HashMap;
 
 import cards.HandValue;
 
+/**
+ * This class maps the payout multiplier to the hand type
+ * @author Chris Bentley
+ */
 public class Payout {
 	
+	// The payout multipliers for a full hand
 	static HashMap<Integer, Integer> MAIN_BET_PAYOUT = new HashMap<Integer, Integer>();
+	
+	// The payout multipliers for a 3 card hand
 	static HashMap<Integer, Integer> THREE_CARD_BET_PAYOUT = new HashMap<Integer, Integer>();
 	
 	static
@@ -29,24 +36,24 @@ public class Payout {
 		THREE_CARD_BET_PAYOUT.put(HandValue.ONE_PAIR, 1);
 	}
 	
+	/**
+	 * Determine the payout multiplier for the hand type
+	 * @param handType The type of hand.
+	 * @param fullHand Flag indicating if the hand is a full, 5 card hand.
+	 * @return
+	 */
 	public static int getPayout(int handType, boolean fullHand )
 	{
-		//System.out.println("handType = "+handType+", fullHand = "+fullHand);
+		int payout = 0;
 		
-		if(!MAIN_BET_PAYOUT.keySet().contains(handType))
-		{
-			//System.out.println("No payout.");
-			return 0;
+		if (fullHand) {
+			Integer mainPayout = MAIN_BET_PAYOUT.get(handType);
+			payout = (mainPayout == null ? 0 : mainPayout);
+		} else {
+			Integer sidePayout = THREE_CARD_BET_PAYOUT.get( handType );
+			payout = (sidePayout == null ? 0 : sidePayout);
 		}
-		
-		if( fullHand )
-		{
-			//System.out.println("Full payout of "+MAIN_BET_PAYOUT.get(handType));
-			return MAIN_BET_PAYOUT.get(handType);
-		}
-		
-		//System.out.println("3 card payout of "+THREE_CARD_BET_PAYOUT.get(handType));
-		return THREE_CARD_BET_PAYOUT.get( handType );
+		return payout;
 	}
 
 }

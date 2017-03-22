@@ -1,26 +1,10 @@
 package cards;
 
+/**
+ * A class to represent the type and ranking of a hand
+ * @author Chris Bentley
+ */
 public class HandValue {
-	
-	/*
-	 * High card 0-50 (a,k,q,j,9 = 50)
-	 * Pair 51-89 (2,2,3,4,5 = 16 , a,a,k,q,j = 54) + 35
-	 * Two Pair 14-56
-	 * Three of a kind
-	 * Straight
-	 * Flush
-	 * Full House
-	 * Four of a kind
-	 * Straight flush
-	 * Royal Flush
-	 * 
-	 *     value[0]=1;          //this is the lowest type of hand, so it gets the lowest value
-    value[1]=orderedRanks[0];  //the first determining factor is the highest card,
-    value[2]=orderedRanks[1];  //then the next highest card,
-    value[3]=orderedRanks[2];  //and so on
-    value[4]=orderedRanks[3];
-    value[5]=orderedRanks[4];
-	 */
 	
 	public static final int HIGH_CARD = 1;
 	public static final int ONE_PAIR = 2;
@@ -36,101 +20,107 @@ public class HandValue {
 	private int handType;	
 	private int[] rank = new int[5];
 	
-	public HandValue()
-	{		
-	}
+	public HandValue(){}
 	
+	/**
+	 * Creates a new HandValue
+	 * @param handType The type of hand
+	 * @param rank The ordered cards of a hand
+	 */
 	public HandValue(int handType, int[] rank)
 	{
 		this.handType = handType;
 		this.rank = rank;
 	}
-	
-	public int[] getRank()
-	{
-		return rank;
-	}
-	public int getHandType()
-	{
+
+	/**
+	 * Gets the handType
+	 * @return the handType
+	 */
+	public int getHandType() {
 		return handType;
 	}
-	public void setHandType(int handType)
-	{
+
+	/**
+	 * Sets the handType
+	 * @param handType the handType to set
+	 */
+	public void setHandType( int handType ) {
 		this.handType = handType;
 	}
-	public void setRank(int[] rank)
-	{
+
+	/**
+	 * Gets the rank
+	 * @return the rank
+	 */
+	public int[] getRank() {
+		return rank;
+	}
+
+	/**
+	 * Sets the rank
+	 * @param rank the rank to set
+	 */
+	public void setRank( int[] rank ) {
 		this.rank = rank;
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
 	public String toString()
 	{
 		String valueStr = "";
 		
-		if(handType == HandValue.ROYAL_FLUSH)
-			return "Royal Flush";
-		
-		if(handType == HandValue.STRAIGHT_FLUSH)
-		{
-			Card highCard = new Card(rank[0]);
-			return "Straight Flush, "+highCard.getRank() + " high";
+		Card highCard, highPair, lowPair;
+		switch ( handType ) {
+			case ROYAL_FLUSH:
+				valueStr = "Royal Flush";
+				break;
+			case STRAIGHT_FLUSH:
+				highCard = new Card(rank[0]);
+				valueStr = "Straight Flush, "+highCard.getRank() + " high";
+				break;
+			case FOUR_OF_A_KIND:
+				highCard = new Card(rank[0]);
+				valueStr = "Four "+ highCard.getRankPlural();
+				break;
+			case FULL_HOUSE:
+				highPair = new Card(rank[0]);
+				lowPair = new Card(rank[3]);
+				valueStr = "Full house.  "+highPair.getRankPlural()+" over "+lowPair.getRankPlural();
+				break;
+			case FLUSH:
+				highPair = new Card(rank[0]);
+				valueStr = "Flush. "+highPair.getRank()+" high.";
+				break;
+			case STRAIGHT:
+				highCard = new Card(rank[0]);
+				valueStr = "Straight. "+highCard.getRank()+" high.";
+				break;
+			case THREE_OF_A_KIND:
+				highCard = new Card(rank[0]);
+				valueStr = "Three "+ highCard.getRankPlural();
+				break;
+			case TWO_PAIR:
+				highPair = new Card(rank[0]);
+				lowPair = new Card(rank[2]);
+				valueStr = "Two pair.  "+highPair.getRankPlural()+" over "+lowPair.getRankPlural();
+				break;
+			case ONE_PAIR:
+				highPair = new Card(rank[0]);
+				lowPair = new Card(rank[2]);
+				valueStr = "Pair of "+highPair.getRankPlural()+", "+lowPair.getRank()+" kicker.";
+				break;
+			case HIGH_CARD:
+				highCard = new Card(rank[0]);
+				valueStr = highCard.getRank()+" high.";
+				break;
+			default:
+				valueStr = "Unknown hand";
 		}
 		
-		if(handType == HandValue.FOUR_OF_A_KIND)
-		{
-			
-			Card highCard = new Card(rank[0]);
-			return "Four "+ highCard.getRankPlural();
-		}
-		
-		if(handType == HandValue.FULL_HOUSE)
-		{			
-			Card highPair = new Card(rank[0]);
-			Card lowPair = new Card(rank[3]);
-			
-			return "Full house.  "+highPair.getRankPlural()+" over "+lowPair.getRankPlural();
-		}
-		
-		if(handType == HandValue.FLUSH)
-		{
-			Card highPair = new Card(rank[0]);
-			return "Flush. "+highPair.getRank()+" high.";
-		}
-		
-		if(handType == HandValue.STRAIGHT)
-		{
-			Card highPair = new Card(rank[0]);
-			return "Straight. "+highPair.getRank()+" high.";
-		}
-		
-		if(handType == HandValue.THREE_OF_A_KIND)
-		{
-			
-			Card highCard = new Card(rank[0]);
-			return "Three "+ highCard.getRankPlural();
-		}
-		
-		if(handType == HandValue.TWO_PAIR)
-		{			
-			Card highPair = new Card(rank[0]);
-			Card lowPair = new Card(rank[2]);
-			return "Two pair.  "+highPair.getRankPlural()+" over "+lowPair.getRankPlural();
-		}
-		
-		if(handType == HandValue.ONE_PAIR)
-		{			
-			Card highPair = new Card(rank[0]);
-			Card lowPair = new Card(rank[2]);
-			return "Pair of "+highPair.getRankPlural()+", "+lowPair.getRank()+" kicker.";
-		}
-		
-		if(handType == HandValue.HIGH_CARD)
-		{
-			Card highPair = new Card(rank[0]);
-			return highPair.getRank()+" high.";
-		}
-		
-		return "Unknown hand";
+		return valueStr;
 	}
-
 }

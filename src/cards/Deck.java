@@ -2,51 +2,64 @@ package cards;
 
 import java.util.ArrayList;
 
-
+/**
+ * This class is used to manipulate a deck of cards
+ * @author Chris Bentley
+ */
 public class Deck {
 	
-	private static Card[] deck = new Card[52];
-	private static int cardsDealt = 0;
+	// An array to contain the deck of cards
+	private Card[] deck = new Card[52];
 	
-	public Deck()
-	{
+	// How many cards have been dealt from the deck
+	private int cardsDealt = 0;
+	
+	/**
+	 * Create a new deck of 52 cards
+	 */
+	public Deck() {
 		for ( int i = 0; i < deck.length; i++ )
-			deck[ i ] = new Card( i );
+			deck[i] = new Card( i );
 	}
 	
-	public void printDeck()
-	{
-		for ( int i = 0; i < deck.length; i++ )
-		{
-			if(i%13 == 0 && i>0)
-				System.out.println("");
-			System.out.print(deck[i].getTruncatedString());
-			if((i+1)%13!=0)
-				System.out.print(", ");
+	/**
+	 * Prints out the deck of cards
+	 */
+	public void printDeck() {
+		for ( int i = 0; i < deck.length; i++ ) {
+			if ( i % 13 == 0 && i > 0 )
+				System.out.println( "" );
+			System.out.print( deck[i].getTruncatedString() );
+			if ( ( i + 1 ) % 13 != 0 )
+				System.out.print( ", " );
 		}
-		System.out.println("");
+		System.out.println( "" );
 	}
 	
-	public void shuffle()
-	{
+	/**
+	 * Randomly shuffle the deck of cards
+	 */
+	public void shuffle() {
 		cardsDealt = 0;
-		
-		for(int i=deck.length-1; i>0; i--)
-		{
-			int j = (int)(Math.random() * i );
+
+		for ( int i = deck.length - 1; i > 0; i-- ) {
+			int j = (int) ( Math.random() * i );
 			Card temp = deck[j];
 			deck[j] = deck[i];
 			deck[i] = temp;
 		}
 	}
 	
-	public ArrayList<Card> deal(int numToDeal)
-	{
+	/**
+	 * Deal from the dec of cards
+	 * @param numToDeal The number of cards to deal
+	 * @return The list of dealt cards
+	 */
+	public ArrayList<Card> deal( int numToDeal ) {
 		ArrayList<Card> cards = new ArrayList<Card>();
-		
-		for(int i = 0;i<numToDeal; i++)
-		{
-			cards.add(deck[cardsDealt++]);
+
+		for ( int i = 0; i < numToDeal; i++ ) {
+			cards.add( deck[cardsDealt++] );
 		}
 		return cards;
 	}

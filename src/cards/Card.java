@@ -1,5 +1,9 @@
 package cards;
 
+/**
+ * A helper class to represent the value of a card
+ * @author Chris Bentley
+ */
 public class Card {
 	
 	final static String[] SUITE = new String[]{"Clubs", "Diamonds", "Hearts", "Spades"};
@@ -63,8 +67,9 @@ public class Card {
 	{
 		for ( int i = 0; i < 52; i++ )
 		{
-			if(i%13 == 0 && i>0)
+			if(i%13 == 0 && i>0) {
 				System.out.println("");
+			}
 			System.out.print(new Card(i).getTruncatedString()+", ");
 		}
 	}
