@@ -17,11 +17,27 @@ import cards.HandValue;
  */
 public class Game {
 	
-	private Deck deck = new Deck();
+	private Deck deck;
 	private Player player = null;
 	
+	/**
+	 * Create a new game with a default deck
+	 * @param player The player
+	 */
 	public Game( Player player ){
 		this.player = player;
+		deck = new Deck();
+	}
+	
+	/**
+	 * Create a new game with, passing in the deck
+	 * This is used for JUnit testing the deal method
+	 * @param player The player
+	 * @param deck The deck of cards
+	 */
+	public Game( Player player, Deck deck ){
+		this.player = player;
+		this.deck = deck;
 	}
 	
 	/**
@@ -80,9 +96,9 @@ public class Game {
 	 * @param numCards The number of cards to deal
 	 * @param fullHand Flag indicating if this deal should adjust for 10s or better
 	 */
-	private void dealCards( Hand hand, int numCards, boolean fullHand ) {
+	protected void dealCards( Hand hand, int numCards, boolean fullHand ) {
 		hand.addCards( deck.deal( numCards ) );
-		hand.GenerateHandValue();
+		hand.generateHandValue();
 
 		if ( fullHand ) {
 			adjustHandValueForTensOrBetter( hand );
@@ -93,7 +109,7 @@ public class Game {
 	 * Determine if the player made a side bet and if the initial 3 card hand won
 	 * @param hand The initial 3 card hand.
 	 */
-	private void handleSideBet( Hand hand ) {
+	protected void handleSideBet( Hand hand ) {
 		if ( player.getSideBet() > 0 ) {
 			processPayout( player.getSideBet(), hand, false );
 		}
@@ -105,7 +121,7 @@ public class Game {
 	 * @param hand The hand
 	 * @param fullHand Flag indicating if this was a full hand or a 3 card hand
 	 */
-	private void processPayout( int bet, Hand hand, boolean fullHand ) {
+	protected void processPayout( int bet, Hand hand, boolean fullHand ) {
 		int payoutMultiplyer = Payout.getPayout( hand.getValue().getHandType(), fullHand );
 
 		int payout = ( payoutMultiplyer * bet );
@@ -113,7 +129,7 @@ public class Game {
 			player.addMoney( payout );
 			if ( payout > player.getBiggestPayout() ) {
 				player.setBiggestPayout( payout );
-				player.setBiggestHand( hand );
+				player.setBiggestHand( hand.clone() );
 			}
 		} else {
 			player.subtractMoney( bet );
@@ -126,7 +142,7 @@ public class Game {
 	 * Only pairs of 10s or better will payout for the full hand.
 	 * @param hand The current hand
 	 */
-	private void adjustHandValueForTensOrBetter( Hand hand )
+	protected void adjustHandValueForTensOrBetter( Hand hand )
 	{	
 		if( hand.getValue().getHandType() == HandValue.ONE_PAIR && ( hand.getValue().getRank()[0] < Card.TEN ) ) {
 			hand.getValue().setHandType( HandValue.HIGH_CARD );
@@ -204,8 +220,8 @@ public class Game {
 
 				// 5 spread = 5,7,9 - 3,4,7
 				// Three to a straight flush, spread 5, with at least two high cards
-				if ( highCard - lowCard == 4 && highCard >= Card.TEN ) {
-					if ( handValue.getRank()[1] > Card.TEN ) {
+				if ( highCard - lowCard == 4 && highCard > Card.TEN ) {
+					if ( handValue.getRank()[1] >= Card.TEN ) {
 						return true;
 					}
 				}
@@ -224,8 +240,9 @@ public class Game {
 			// Any four to an outside straight
 			if ( handValue.getHandType() == HandValue.STRAIGHT ) {
 				// J,Q,K,A is not an outside straight
-				if ( handValue.getRank()[0] == Card.ACE )
-					return false;
+				if ( handValue.getRank()[0] == Card.ACE ){
+					// do nothing - Check J-A as an inside straight
+				}
 				// A,2,3,4 is not an outside straight
 				if ( handValue.getRank()[0] == Card.FOUR )
 					return false;

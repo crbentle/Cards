@@ -6,7 +6,7 @@ package cards;
  */
 public class Card {
 	
-	final static String[] SUITE = new String[]{"Clubs", "Diamonds", "Hearts", "Spades"};
+	final static String[] SUIT = new String[]{"Clubs", "Diamonds", "Hearts", "Spades"};
 	final static String[] RANK = new String[]{"Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace"};
 	final static String[] TRUNCATED_RANK = new String[]{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
 	
@@ -29,7 +29,7 @@ public class Card {
 		return value % 13;
 	}
 	
-	public int getSuiteValue()
+	public int getSuitValue()
 	{
 		return value / 13;
 	}
@@ -41,12 +41,17 @@ public class Card {
 	
 	public String toString()
 	{
-		return RANK[getRankValue()]+" of "+SUITE[getSuiteValue()];
+		return RANK[getRankValue()]+" of "+SUIT[getSuitValue()];
 	}
 	
 	public String getTruncatedString()
 	{
-		return TRUNCATED_RANK[getRankValue()]+""+SUITE[getSuiteValue()].toLowerCase().charAt(0);
+		return TRUNCATED_RANK[getRankValue()]+""+SUIT[getSuitValue()].toLowerCase().charAt(0);
+	}
+	
+	public String getSuit()
+	{
+		return SUIT[getSuitValue()];
 	}
 	
 	public String getRank()

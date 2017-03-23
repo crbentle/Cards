@@ -89,7 +89,7 @@ public class HandValue {
 			case FULL_HOUSE:
 				highPair = new Card(rank[0]);
 				lowPair = new Card(rank[3]);
-				valueStr = "Full house.  "+highPair.getRankPlural()+" over "+lowPair.getRankPlural();
+				valueStr = "Full house. "+highPair.getRankPlural()+" over "+lowPair.getRankPlural();
 				break;
 			case FLUSH:
 				highPair = new Card(rank[0]);
@@ -106,7 +106,7 @@ public class HandValue {
 			case TWO_PAIR:
 				highPair = new Card(rank[0]);
 				lowPair = new Card(rank[2]);
-				valueStr = "Two pair.  "+highPair.getRankPlural()+" over "+lowPair.getRankPlural();
+				valueStr = "Two pair. "+highPair.getRankPlural()+" over "+lowPair.getRankPlural();
 				break;
 			case ONE_PAIR:
 				highPair = new Card(rank[0]);

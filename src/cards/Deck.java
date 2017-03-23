@@ -51,7 +51,7 @@ public class Deck {
 	}
 	
 	/**
-	 * Deal from the dec of cards
+	 * Deal from the deck of cards
 	 * @param numToDeal The number of cards to deal
 	 * @return The list of dealt cards
 	 */
@@ -64,6 +64,22 @@ public class Deck {
 		return cards;
 	}
 	
+	/**
+	 * Gets the deck
+	 * @return the deck
+	 */
+	public Card[] getDeck() {
+		return deck;
+	}
+
+	/**
+	 * Gets the cardsDealt
+	 * @return the cardsDealt
+	 */
+	public int getCardsDealt() {
+		return cardsDealt;
+	}
+
 	public static void main(String[] args){
 		Deck newDeck = new Deck();
 		//newDeck.printDeck();

@@ -20,7 +20,7 @@ public class Payout {
 	{
 		MAIN_BET_PAYOUT.put(HandValue.ROYAL_FLUSH, 1000);
 		MAIN_BET_PAYOUT.put(HandValue.STRAIGHT_FLUSH, 200);
-		MAIN_BET_PAYOUT.put(HandValue.FOUR_OF_A_KIND, 1);
+		MAIN_BET_PAYOUT.put(HandValue.FOUR_OF_A_KIND, 50);
 		MAIN_BET_PAYOUT.put(HandValue.FULL_HOUSE, 11);
 		MAIN_BET_PAYOUT.put(HandValue.FLUSH, 8);
 		MAIN_BET_PAYOUT.put(HandValue.STRAIGHT, 5);

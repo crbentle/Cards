@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -23,6 +24,12 @@ public class Hand {
 		this.hand = new ArrayList<Card>();
 	}
 	
+	public Hand clone( ) {
+		Hand newHand = new Hand();
+		newHand.addCards( getHand() );
+		return newHand;
+	}
+	
 	/**
 	 * Adds a Card to the hand
 	 * @param card The Card to add
@@ -36,7 +43,7 @@ public class Hand {
 	 * Adds a list of Cards to the hand
 	 * @param cards The list of Cards to add
 	 */
-	public void addCards(ArrayList<Card> cards)
+	public void addCards(List<Card> cards)
 	{
 		hand.addAll(cards);
 	}
@@ -53,7 +60,7 @@ public class Hand {
 	/**
 	 * Generate the value of this hand
 	 */
-	public void GenerateHandValue() {
+	public void generateHandValue() {
 		// Sort the cards, placing the highest ranked cards first
 		Collections.sort( hand, new CardComparator() );
 
@@ -107,21 +114,9 @@ public class Hand {
 	 * Get a String representation of the hand
 	 * @return The hand
 	 */
-	public String printHand()
+	public void printHand()
 	{
-		String handStr = "";
-		boolean firstCard = true;
-		GenerateHandValue();
-		for(Card card : hand)
-		{
-			if( !firstCard )
-			{
-				handStr += ", ";
-			}
-			handStr += card.getTruncatedString();
-			firstCard = false;
-		}
-		return handStr;
+		System.out.println( this );
 	}
 	
 	
@@ -146,10 +141,11 @@ public class Hand {
 	 * Determine if this hand is a flush
 	 * @return True if the hand is a flush
 	 */
-	private boolean isFlush() {
+	protected boolean isFlush() {
 		for ( int i = 0; i < hand.size() - 1; i++ ) {
-			if ( hand.get( i ).getSuiteValue() != hand.get( i + 1 ).getSuiteValue() )
+			if ( hand.get( i ).getSuitValue() != hand.get( i + 1 ).getSuitValue() ) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -160,7 +156,7 @@ public class Hand {
 	 *  check that the last card is a 2. If it is, continue comparing the next cards.
 	 * @return True if the hand is a straight
 	 */
-	private boolean isStraight() {
+	protected boolean isStraight() {
 		// A,5,4,3,2
 		// A,4,3,2
 		for ( int i = 0; i < hand.size() - 1; i++ ) {
@@ -177,10 +173,10 @@ public class Hand {
 	
 	/**
 	 * Gets a Map containing the pairs in this hand.
-	 * The Map values will be the number of cards that match they key.
+	 * The Map values will be the number of cards that match the key.
 	 * @return A Map containing the pairs
 	 */
-	private HashMap<Integer, Integer> getPairs() {
+	protected HashMap<Integer, Integer> getPairs() {
 		HashMap<Integer, Integer> pairMap = new HashMap<Integer, Integer>();
 		int sameCards = 1;
 		// loop through all of the cards, looking for matches
@@ -213,7 +209,7 @@ public class Hand {
 	 * @param handType The type of this hand
 	 * @return An array sorted with the highest card first
 	 */
-	private int[] getHandRank( int handType ) {
+	protected int[] getHandRank( int handType ) {
 		int[] handRank = new int[hand.size()];
 
 		if ( handType == HandValue.STRAIGHT || handType == HandValue.STRAIGHT_FLUSH ) {
@@ -237,7 +233,7 @@ public class Hand {
 	 * Sort a hand, moving the paired cards to the top
 	 * @param pairs The Map of pairs in this hand
 	 */
-	private void sortSingleMatch( HashMap<Integer, Integer> pairs ) {
+	protected void sortSingleMatch( HashMap<Integer, Integer> pairs ) {
 		ArrayList<Card> nonPairedCards = new ArrayList<Card>();
 
 		Set<Integer> keySet = pairs.keySet();
@@ -261,7 +257,7 @@ public class Hand {
 	 * Sort a hand that contains two sets of matching cards (two pair or full house)
 	 * @param pairs The Map of pairs in this hand
 	 */
-	private void sortDoubleMatch( HashMap<Integer, Integer> pairs ) {
+	protected void sortDoubleMatch( HashMap<Integer, Integer> pairs ) {
 		ArrayList<Card> firstPair = new ArrayList<Card>();
 		ArrayList<Card> secondPair = new ArrayList<Card>();
 		ArrayList<Card> nonPairedCards = new ArrayList<Card>();
@@ -276,6 +272,9 @@ public class Hand {
 				// If a card has 3 matches we know it will be the highest rank, regardless of the face value
 				firstPair.add( card );
 				fullHouse = true;
+			} else if( firstPair.isEmpty() && pairs.values().contains( 3 ) ) {
+				// We have a full house and the highest card is a 2 pair
+				secondPair.add( card );
 			} else {
 				if ( firstPair.isEmpty() ) {
 					firstPair.add( card );
@@ -307,6 +306,26 @@ public class Hand {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		String handStr = "";
+		boolean firstCard = true;
+		generateHandValue();
+		for(Card card : hand)
+		{
+			if( !firstCard )
+			{
+				handStr += ", ";
+			}
+			handStr += card.getTruncatedString();
+			firstCard = false;
+		}
+		return handStr;
+	}
+
 	public static void main(String[] args)
 	{
 		Hand hand = new Hand();
@@ -316,7 +335,7 @@ public class Hand {
 		hand.addCard( new Card(9) );
 		hand.addCard( new Card(8) );
 		
-		System.out.println( hand.printHand() );
+		System.out.println( hand );
 		
 		System.out.println(hand.getValue());
 	}
